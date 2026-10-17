@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир домашних питомцев — Главная</title>
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #4a5568;
+            --primary: #88C8FF;
+            --accent: #FFCCFF;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+            --gap: 1.5rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #1a1a1d;
+            --bg-card: #2d2d33;
+            --text-main: #f7fafc;
+            --text-muted: #cbd5e0;
+            --primary: #5a9ed6;
+            --accent: #d63384;
+            --border: #333;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--text-main);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .functional-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-width: 200px;
+        }
+
+        .func-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .func-btn:hover { background-color: var(--primary); color: #000; }
+
+        /* Навигация и выпадающее меню */
+        .nav-menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.5rem; }
+        .nav-menu > li { position: relative; }
+
+        .dropbtn {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.7rem 1rem;
+            display: block;
+            border-radius: var(--radius);
+        }
+        .dropbtn:hover, .dropdown.open .dropbtn { background: rgba(255,255,255,0.2); }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--bg-card);
+            min-width: 220px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+            z-index: 2000;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 0.7rem 1rem;
+            display: block;
+        }
+        .dropdown-content a:hover { background: var(--primary); color: #fff; }
+        .dropdown.open .dropdown-content { display: block; }
+
+        /* Hero-блок */
+        .hero {
+            background-color: var(--accent);
+            color: var(--text-main);
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-top: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+        .hero h2 { margin: 0 0 1rem 0; font-size: 2.2rem; }
+        .hero p { margin: 0; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero button {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            margin-top: 1.5rem;
+        }
+        .hero button:hover { background-color: #66b3ff; }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            margin-top: var(--gap);
+            width: 100%;
+        }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none; /* скрыто по умолчанию */
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        .modal h3 { margin-top: 0; color: var(--text-main); }
+        .modal label { display: block; margin-top: 1rem; font-weight: 500; color: var(--text-main); }
+        .modal input { width: 100%; margin-top: 0.25rem; }
+        .modal .modal-actions { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.5rem; }
+        .close-modal {
+            position: absolute;
+            right: 1rem; top: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        .close-modal:hover { color: var(--text-main); }
+
+        @media (max-width: 768px) {
+            .container { flex-direction: column; text-align: center; }
+            .nav-menu { width: 100%; justify-content: center; margin-top: 1rem; }
+            .dropdown-content { right: 50%; transform: translateX(50%); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="logo" aria-label="Логотип и название сайта">
+            <img src="https://i.pinimg.com/736x/25/f6/18/25f618610b642249f1bffbb62b116236.jpg" alt="Логотип сайта: Мир домашних питомцев" width="50" height="50">
+            <h1>Мир домашних питомцев</h1>
+        </div>
+
+        <div class="functional-buttons">
+            <!-- Поиск -->
+            <form action="/search.html" method="GET" style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                <input type="text" name="q" placeholder="Найти на сайте..." aria-label="Поиск по сайту">
+                <button type="submit" class="func-btn">↵</button>
+            </form>
+
+            <!-- Кнопка темы -->
+            <button id="theme-toggle" class="func-btn" aria-label="Переключить тему оформления">🌙 Тема</button>
+
+            <!-- Кнопки вызова модальных окон -->
+            <button type="button" class="func-btn" id="btn-login">Войти</button>
+            <button type="button" class="func-btn" id="btn-register">Регистрация</button>
+        </div>
+
+        <!-- Навигация -->
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="index.new.html">Главная</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" aria-haspopup="true" aria-expanded="false">Разделы сайта ▾</a>
+                    <div class="dropdown-content">
+                        <a href="breeds.new.html">Породы</a>
+                        <a href="care.new.html">Уход</a>
+                        <a href="health.new.html">Здоровье</a>
+                        <a href="fun.new.html">Забавное</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <h2>Всё о котах и собаках: советы, истории, дружба</h2>
+    <p>Добро пожаловать в мир домашних питомцев! Здесь вы найдёте полезные советы по уходу, интересные факты и истории из жизни котов и собак.</p>
+    <a href="breeds.html"><button>Узнать о породах</button></a>
+</section>
+
+<main class="container">
+    <h2>Почему стоит остаться с нами?</h2>
+    <p>Мы собрали самую полную информацию о содержании, воспитании и здоровье ваших любимцев. Присоединяйтесь к нашему сообществу!</p>
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2024 Мир домашних питомцев. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Модальное окно: Вход -->
+<div class="modal-overlay" id="modal-login">
+    <div class="modal">
+        <button class="close-modal">&times;</button>
+        <h3>Вход в аккаунт</h3>
+        <form action="/login.php" method="POST">
+            <label for="login-email">E-mail</label>
+            <input type="email" id="login-email" name="email" required placeholder="name@example.com">
+            <label for="login-password">Пароль</label>
+            <input type="password" id="login-password" name="password" required placeholder="••••••••">
+            <div class="modal-actions">
+                <button type="submit" class="func-btn">Войти</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно: Регистрация -->
+<div class="modal-overlay" id="modal-register">
+    <div class="modal">
+        <button class="close-modal">&times;</button>
+        <h3>Регистрация</h3>
+        <form action="/register.php" method="POST">
+            <label for="reg-name">Имя</label>
+            <input type="text" id="reg-name" name="name" required placeholder="Иван Иванов">
+            <label for="reg-email">E-mail</label>
+            <input type="email" id="reg-email" name="email" required placeholder="name@example.com">
+            <label for="reg-password">Пароль</label>
+            <input type="password" id="reg-password" name="password" required placeholder="Минимум 8 символов">
+            <div class="modal-actions">
+                <button type="submit" class="func-btn">Зарегистрироваться</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Выпадающее меню
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        const btn = dropdown.querySelector('.dropbtn');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.toggle('open');
+        });
+    });
+
+    // Переключение темы
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.setAttribute('data-theme', 
+            document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'dark'
+        );
+        themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' 
+            ? '☀️ Светлая тема' 
+            : '🌙 Тёмная тема';
+    });
+
+    // Управление модальными окнами
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+            // Чтобы можно было закрыть по клику вне окна
+            const overlay = modal.closest('.modal-overlay');
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal(overlay);
+            }, { once: true });
+        }
+    }
+
+    function closeModal(modalOverlay) {
+        modalOverlay.classList.remove('active');
+    }
+
+    const btnLogin = document.getElementById('btn-login');
+    const btnRegister = document.getElementById('btn-register');
+    const closeButtons = document.querySelectorAll('.close-modal');
+
+    btnLogin.addEventListener('click', () => openModal('modal-login'));
+    btnRegister.addEventListener('click', () => openModal('modal-register'));
+
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const modalOverlay = e.target.closest('.modal-overlay');
+            if (modalOverlay) closeModal(modalOverlay);
+        });
+    });
+</script>
+	<script>
+    const searchForm = document.querySelector('form[action="/search.html"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // не уходим на другую страницу
+            const query = e.target.querySelector('input[name="q"]')?.value.trim().toLowerCase();
+            if (!query) return;
+
+            // Сбрасываем подсветку старых результатов
+            document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+
+            let found = false;
+            // Ищем по всем текстовым узлам на странице
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                if (!text || text.length < query.length) return;
+
+                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+                if (!regex.test(text)) return;
+
+                found = true;
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            });
+
+            if (!found) {
+                alert('Ничего не найдено на этой странице');
+            }
+        });
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+</script>
+
+<style>
+    .search-highlight {
+        background-color: #ffeb3b;
+        color: #000;
+        padding: 0 2px;
+        border-radius: 4px;
+    }
+</style>
+</body>
+</html>
+

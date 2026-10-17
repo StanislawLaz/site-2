@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Забавное и интересное</title>
+    <style>
+        :root {
+            --bg-page: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #4a5568;
+            --primary: #88C8FF;
+            --accent: #FFCCFF;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+            --gap: 1.5rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #1a1a1d;
+            --bg-card: #2d2d33;
+            --text-main: #f7fafc;
+            --text-muted: #cbd5e0;
+            --primary: #5a9ed6;
+            --accent: #d63384;
+            --border: #333;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--text-main);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Стили для широкой области (для блока-мема) */
+        .full-width-area {
+            width: 100%;
+            max-width: 1400px; /* Чуть шире контейнера, чтобы растянуть на всю видимую часть */
+            margin: 0 auto;
+            padding: 0 5%; /* Отступы по бокам, чтобы не прилипало к краям экрана */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .functional-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-width: 200px;
+        }
+
+        .func-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .func-btn:hover { background-color: var(--primary-hover, var(--primary)); }
+
+        /* Навигация и выпадающее меню */
+        .nav-menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.5rem; }
+        .nav-menu > li { position: relative; }
+
+        .dropbtn {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.7rem 1rem;
+            display: block;
+            border-radius: var(--radius);
+        }
+        .dropbtn:hover { background: rgba(255,255,255,0.2); }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--bg-card);
+            min-width: 220px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+            z-index: 2000;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 0.7rem 1rem;
+            display: block;
+        }
+        .dropdown-content a:hover { background: var(--primary); color: #fff; }
+        .dropdown.open .dropdown-content { display: block; }
+
+        h1.page-title {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-main);
+        }
+
+        /* Фильтры */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Карусель - ИСПРАВЛЕННАЯ ВЕРСИЯ */
+        .carousel-container {
+            margin: 2rem 0;
+            width: 100%; /* На всю ширину контейнера */
+        }
+
+        input[type="radio"][name="slide"] { display: none; }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            /* Высота теперь адаптивная: минимум 350px, максимум 500px */
+            height: 450px; 
+            overflow: hidden;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Картинка заполняет блок, не искажаясь */
+        }
+
+        #slide-1:checked ~ .carousel #slide-content-1,
+        #slide-2:checked ~ .carousel #slide-content-2,
+        #slide-3:checked ~ .carousel #slide-content-3,
+        #slide-4:checked ~ .carousel #slide-content-4 {
+            opacity: 1;
+        }
+
+        @keyframes carousel {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            33.33% { opacity: 1; }
+            43.33% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        #slide-content-1 { animation: carousel 16s infinite 0s; }
+        #slide-content-2 { animation: carousel 16s infinite -4s; }
+        #slide-content-3 { animation: carousel 16s infinite -8s; }
+        #slide-content-4 { animation: carousel 16s infinite -12s; }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #slide-1:checked ~ .carousel-indicators label[for="slide-1"],
+        #slide-2:checked ~ .carousel-indicators label[for="slide-2"],
+        #slide-3:checked ~ .carousel-indicators label[for="slide-3"],
+        #slide-4:checked ~ .carousel-indicators label[for="slide-4"] {
+            background: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .carousel { height: 350px; } /* Уменьшаем высоту на планшетах */
+        }
+
+        @media (max-width: 480px) {
+            .carousel { height: 280px; } /* Еще меньше на телефонах */
+        }
+
+        /* Сетка карточек */
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap);
+        }
+
+        @media (min-width: 640px) {
+            .cards-container { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        }
+
+        .card-wrapper {
+            display: contents;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+        .card h3 {
+            color: var(--text-main);
+            margin: 0 0 1rem 0;
+            font-size: 1.3rem;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 200px;
+            border-radius: var(--radius);
+            object-fit: cover;
+            background-color: var(--border);
+        }
+
+        /* Формы в карточках */
+        .story-form, .upload-form {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .story-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            resize: vertical;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-card);
+        }
+
+        .upload-area:hover { border-color: var(--primary); background-color: rgba(136, 200, 255, 0.05); }
+
+        .publish-btn, .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            align-self: center;
+            width: fit-content;
+        }
+
+        .publish-btn:hover, .upload-btn:hover { background-color: #66b3ff; }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            margin-top: var(--gap);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="logo" aria-label="Логотип и название сайта">
+            <img src="https://i.pinimg.com/736x/25/f6/18/25f618610b642249f1bffbb62b116236.jpg" alt="Логотип сайта: Мир домашних питомцев" width="50" height="50">
+            <h1>Мир домашних питомцев</h1>
+        </div>
+        <div class="functional-buttons">
+            <!-- Поиск -->
+            <form action="/search.html" method="GET" style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                <input type="text" name="q" placeholder="Найти на сайте..." aria-label="Поиск по сайту">
+                <button type="submit" class="func-btn">↵</button>
+            </form>
+            <!-- Кнопка темы -->
+            <button id="theme-toggle" class="func-btn" aria-label="Переключить тему оформления">🌙 Тема</button>
+            <!-- Навигация -->
+            <nav>
+                <ul class="nav-menu">
+                <li><a href="index.new.html">Главная</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" aria-haspopup="true" aria-expanded="false">Разделы сайта ▾</a>
+                    <div class="dropdown-content">
+                        <a href="breeds.new.html">Породы</a>
+                        <a href="care.new.html">Уход</a>
+                        <a href="health.new.html">Здоровье</a>
+                        <a href="fun.new.html">Забавное</a>
+                    </div>
+                </li>
+            </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">Забавное и интересное</h1>
+
+    <!-- Фильтры -->
+    <div class="filters" role="group" aria-label="Фильтры по типу животных">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="cat">Кошки</button>
+        <button class="filter-btn" data-filter="dog">Собаки</button>
+        <button class="filter-btn" data-filter="other">Другие</button>
+    </div>
+	<!-- Карусель -->
+    <div class="carousel-container">
+        <!-- Радиокнопки для управления слайдами -->
+        <input type="radio" name="slide" id="slide-1" checked>
+        <input type="radio" name="slide" id="slide-2">
+        <input type="radio" name="slide" id="slide-3">
+        <input type="radio" name="slide" id="slide-4">
+
+        <div class="carousel">
+            <div class="carousel-slide" id="slide-content-1">
+                <img src="https://i.postimg.cc/85QpKw5w/Soderjanie.jpg" alt="Питомец уютно устроился на диване">
+            </div>
+            <div class="carousel-slide" id="slide-content-2">
+                <img src="https://i.postimg.cc/VNRLZCvz/IMG-20250330-174556-468.jpg" alt="Питомец позирует для фото, выглядит забавно">
+            </div>
+            <div class="carousel-slide" id="slide-content-3">
+                <img src="https://i.postimg.cc/KvMTq02K/diting-result-aa33679a513511f1ad8192b740abe57e-1.jpg" alt="Питомец выбрал самое удобное место в доме">
+            </div>
+            <div class="carousel-slide" id="slide-content-4">
+                <img src="https://i.postimg.cc/pXzZhWpR/IMG-20230623-222122-047.jpg" alt="Питомец крепко спит, свернувшись клубочком">
+            </div>
+        </div>
+
+        <!-- Индикаторы (точки) -->
+        <div class="carousel-indicators" role="tablist" aria-label="Переключение слайдов карусели">
+            <label for="slide-1" class="indicator" aria-controls="slide-content-1" aria-selected="true"></label>
+            <label for="slide-2" class="indicator" aria-controls="slide-content-2" aria-selected="false"></label>
+            <label for="slide-3" class="indicator" aria-controls="slide-content-3" aria-selected="false"></label>
+            <label for="slide-4" class="indicator" aria-controls="slide-content-4" aria-selected="false"></label>
+        </div>
+    </div>
+
+    <!-- Сетка карточек -->
+    <div class="cards-container">
+        <!-- Карточка: фотосетка -->
+        <div class="card-wrapper">
+            <div class="card">
+                <h3>Галерея забавных моментов</h3>
+                <p>Подборка самых смешных и милых кадров — посмотрите, как питомцы умеют удивлять!</p>
+                <div class="photo-grid" role="list" aria-label="Сетка фотографий питомцев">
+                    <img src="https://i.postimg.cc/2SLnpNXJ/diting-result-c097843d520511f19f0a12207188c683-1.jpg" alt="Собака спряталась под одеялом, видны только уши">
+                    <img src="https://i.postimg.cc/3NBW5ng0/IMG-20240819-233134-279.jpg" alt="Щенок в детстве — невероятно милый момент">
+                    <img src="https://i.postimg.cc/JnQRGtGs/diting-result-32074a36520811f186620246d51e2684-1.jpg" alt="Кошка устроилась в коробке — её любимое место">
+                    <img src="https://i.postimg.cc/5tdJg8z2/diting-result-05341fc2520811f18d00463fccb17f95-1.jpg" alt="Кошка застыла в необычной позе на полу">
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка: загрузка фото -->
+        <div class="card-wrapper">
+            <div class="card upload-card">
+                <h3>Поделитесь фото питомца</h3>
+                <p class="upload-description">Загрузите любимое фото — лучшие кадры попадут в нашу галерею!</p>
+                
+                <form class="upload-form" enctype="multipart/form-data" aria-labelledby="uploadFormHeading">
+                    <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-describedby="uploadHint">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" aria-hidden="true">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                        </svg>
+                        <p id="uploadHint">Перетащите фото сюда или <span class="browse-btn" style="color:var(--primary); font-weight:bold; cursor:pointer;">выберите файл</span></p>
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                    </div>
+                    
+                    <button type="submit" class="upload-btn">Загрузить фото</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Карточка: история от владельца -->
+        <div class="card-wrapper">
+            <div class="card story-card">
+                <h3>Расскажите забавную историю</h3>
+                <p class="story-description">Поделитесь смешным случаем из жизни питомца — опубликуем самые интересные!</p>
+                
+                <form class="story-form">
+                    <textarea
+                        class="story-textarea"
+                        placeholder="Расскажите, что необычного произошло с вашим питомцем…&#10;&#10;Например: «Мой кот решил, что коробка — это его новый дом…»"
+                        rows="6"
+                        aria-label="Поле для ввода истории о питомце"
+                    ></textarea>
+                    <button type="submit" class="publish-btn">Опубликовать</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Карточка: мем — теперь на всю ширину -->
+        <div class="card-wrapper full-width-area">
+            <div class="card" style="width: 100%; border-radius: var(--radius); box-shadow: var(--shadow-md);">
+                <img src="https://avatars.mds.yandex.net/i?id=711e91f980d32d27cadd51385b6b0ee3_l-7664089-images-thumbs&n=13" alt="Мем про кота и уборку" width="100%" style="border-radius: var(--radius) var(--radius) 0 0;">
+                <h3 style="margin-top: 1rem;">Мем дня</h3>
+                <p>У меня есть друг. Каждый раз, когда я прихожу к нему, он моет полы. Однажды я спросил его: «Что это ты, как я ни приду, всё время полы моешь?» А он говорит: «Звонок у нас очень громкий, а кот — очень пугливый!»</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2024 Мир домашних питомцев. Все права защищены.</p>
+    </div>
+</footer>
+
+<!-- Скрипт для выпадающего меню и переключения темы -->
+<script>
+    // Выпадающее меню
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        const btn = dropdown.querySelector('.dropbtn');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.toggle('open');
+        });
+    });
+
+    // Переключение темы
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.setAttribute('data-theme', 
+            document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'dark'
+        );
+        themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' 
+            ? '☀️ Светлая тема' 
+            : '🌙 Тёмная тема';
+    });
+</script>
+	<script>
+    const searchForm = document.querySelector('form[action="/search.html"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // не уходим на другую страницу
+            const query = e.target.querySelector('input[name="q"]')?.value.trim().toLowerCase();
+            if (!query) return;
+
+            // Сбрасываем подсветку старых результатов
+            document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+
+            let found = false;
+            // Ищем по всем текстовым узлам на странице
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                if (!text || text.length < query.length) return;
+
+                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+                if (!regex.test(text)) return;
+
+                found = true;
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            });
+
+            if (!found) {
+                alert('Ничего не найдено на этой странице');
+            }
+        });
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+</script>
+
+<style>
+    .search-highlight {
+        background-color: #ffeb3b;
+        color: #000;
+        padding: 0 2px;
+        border-radius: 4px;
+    }
+</style>
+</body>
+</html>

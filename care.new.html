@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уход за животными — Мир домашних питомцев</title>
+    <style>
+        :root {
+            --primary: #88C8FF;
+            --primary-hover: #5fa8cc;
+            --text-main: #2d3748;
+            --text-muted: #4a5568;
+            --bg-page: #f5f5f5;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --gap: 1.5rem;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #5a9ed6;
+            --primary-hover: #3a7bb2;
+            --text-main: #e2e8f0;
+            --text-muted: #cbd5e0;
+            --bg-page: #1a1a1d;
+            --bg-card: #2d2d33;
+            --border: #333;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-md: 0 16px 32px rgba(0,0,0,0.4);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background: var(--bg-page);
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        html { scroll-behavior: smooth; }
+        :target { scroll-margin-top: 80px; }
+
+        header {
+            background-color: var(--primary);
+            color: var(--text-main);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--gap);
+        }
+
+        .header-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: var(--gap);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            border-radius: 50%;
+        }
+        .logo h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .functional-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-width: 200px;
+            outline: none;
+        }
+        input[type="text"]:focus { border-color: var(--primary); }
+
+        .func-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .func-btn:hover { background-color: var(--primary-hover); }
+        .func-btn:active { transform: translateY(1px); }
+
+        nav .nav-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 0.5rem;
+        }
+        nav a { color: inherit; text-decoration: none; }
+
+        /* Dropdown */
+        .dropbtn {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.7rem 1rem;
+            display: block;
+            border-radius: var(--radius);
+        }
+        .dropbtn:hover { background: rgba(255,255,255,0.2); }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--bg-card);
+            min-width: 220px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+            z-index: 2000;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 0.6rem 1rem;
+            display: block;
+        }
+        .dropdown-content a:hover { background: var(--primary); color: #fff; }
+        .dropdown.open .dropdown-content { display: block; }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            margin-top: 3rem;
+        }
+
+        main { padding: 2rem 0; }
+
+        h1.page-title {
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+        }
+
+        section { margin-bottom: 4rem; }
+        h2.section-title {
+            color: var(--text-main);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        /* Сетка карточек */
+        .care-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap);
+        }
+        @media (min-width: 600px) { .care-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px) { .care-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            padding: var(--gap);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title { margin: 0 0 1rem 0; color: var(--text-main); }
+
+        ul.care-steps {
+            padding-left: 1.5em;
+            margin: 1em 0;
+        }
+        ul.care-steps li { margin-bottom: 0.7em; color: var(--text-muted); }
+
+        /* Интерактив: фильтр по типу ухода */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Доступность: фокус-стили */
+        a:focus, button:focus, input:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 576px) {
+            .card-image { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container header-wrapper">
+        <div class="logo">
+            <img src="https://i.pinimg.com/736x/25/f6/18/25f618610b642249f1bffbb62b116236.jpg" alt="Логотип сайта" width="50" height="50">
+            <h1>Мир домашних питомцев</h1>
+        </div>
+
+        <div class="functional-buttons">
+            <form action="/search.html" method="GET" class="search-wrapper">
+                <input type="text" name="q" placeholder="Найти на сайте…">
+                <button type="submit" class="func-btn">↵</button>
+            </form>
+            <button id="theme-toggle" class="func-btn" title="Переключить тему" style="padding: 0.6rem;">🌙</button>
+        </div>
+
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="index.new.html">Главная</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" aria-haspopup="true" aria-expanded="false">Разделы сайта ▾</a>
+                    <div class="dropdown-content">
+                        <a href="breeds.new.html">Породы</a>
+                        <a href="care.new.html">Уход</a>
+                        <a href="health.new.html">Здоровье</a>
+                        <a href="fun.new.html">Забавное</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">Уход за животными</h1>
+
+    <!-- Фильтры -->
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="cat">Кошки</button>
+        <button class="filter-btn" data-filter="dog">Собаки</button>
+    </div>
+
+    <section id="cat-care">
+        <h2 class="section-title">Уход за британской короткошёрстной кошкой</h2>
+        <div class="care-grid">
+            <!-- Уход за шерстью -->
+            <article class="card" data-category="cat">
+                <img src="https://img.freepik.com/premium-photo/owner-carefully-combs-bengal-cat-pet-care_1048944-27822703.jpg?semt=ais_hybrid&w=740" alt="Расчёсывание кошки" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">1. Уход за шерстью</h3>
+                    <ul class="care-steps">
+                        <li>вычёсывайте 1–2 раза в неделю специальной щёткой для короткошёрстных кошек;</li>
+                        <li>во время линьки (весной и осенью) вычёсывайте ежедневно;</li>
+                        <li>используйте фурминатор 1 раз в месяц для удаления отмершего подшёрстка;</li>
+                        <li>купание — только по необходимости (не чаще 3–4 раз в год) со специальным шампунем для кошек.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Гигиенические процедуры -->
+            <article class="card" data-category="cat">
+                <img src="https://avatars.mds.yandex.net/i?id=ed0d94277761fc0ce35067542ca870b1_l-5233155-images-thumbs&n=13" alt="Гигиенические процедуры для кошки" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">2. Гигиенические процедуры</h3>
+                    <ul class="care-steps">
+                        <li>регулярно осматривайте и чистите уши влажной салфеткой (не залезайте глубоко в ушной канал);</li>
+                        <li>протирайте глаза ватным диском, если замечаете выделения;</li>
+                        <li>подстригайте когти каждые 2–3 недели когтерезкой;</li>
+                        <li>чистите зубы специальной зубной пастой для кошек 1–2 раза в неделю.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Питание -->
+            <article class="card" data-category="cat">
+                <img src="https://mimer.ru/content/ckfinder/userfiles/images/%D1%81%D1%83%D1%88%D0%BA%D0%B02.jpg" alt="Корм для кошки" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">3. Питание</h3>
+                    <ul class="care-steps">
+                        <li>выбирайте качественный корм премиум‑ или суперпремиум‑класса;</li>
+                        <li>контролируйте порции — порода склонна к ожирению;</li>
+                        <li>обеспечьте постоянный доступ к свежей воде;</li>
+                        <li>избегайте кормления со стола (солёное, сладкое, жирное вредно для кошек);</li>
+                        <li>при натуральном питании обязательно добавляйте витаминно‑минеральные комплексы по рекомендации ветеринара.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Здоровье -->
+            <article class="card" data-category="cat">
+                <img src="https://img.freepik.com/premium-vector/veterinarian-listens-cat-stethoscope-vector-illustration-cartoon-style-fun_456865-251.jpg?semt=ais_hybrid" alt="Ветеринар и кошка" class="card-image">
+                <div class="card-content">
+                    <h3 class="card-title">4. Здоровье</h3>
+                    <ul class="care-steps">
+                        <li>регулярные осмотры у ветеринара (минимум 1 раз в год);</li>
+                        <li>ежегодная вакцинация;</li>
+                        <li>обработка от паразитов (глистов, блох, клещей) каждые 3–6 месяцев;</li>
+                        <li>особое внимание здоровью зубов и почек (склонность к заболеваниям этих органов).</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </section>
+	
+	<section id="dog-care">
+            <h2 class="section-title">Уход за метисом (предположительно с участием пинчера и таксы)</h2>
+            <div class="care-grid">
+                <!-- Прогулки и активность -->
+                <article class="card" data-category="dog">
+                    <img src="https://img.freepik.com/free-photo/happy-dog-running-park-owner-waiting-background_23-2148589027.jpg?t=st=1729387200~exp=1729390800~hmac=a8f7a7e8e8e8e8e8e8e8e8e8e8e8e8e8&w=740" alt="Собака на прогулке" class="card-image">
+                    <div class="card-content">
+                        <h3 class="card-title">1. Прогулки и активность</h3>
+                        <ul class="care-steps">
+                            <li>минимум 2 полноценные прогулки в день по 40–60 минут;</li>
+                            <li>чередуйте маршруты, чтобы собаке было интересно и она лучше социализировалась;</li>
+                            <li>в холодную погоду используйте утеплённую попону: у метисов с пинчером часто короткая шерсть и чувствительность к холоду;</li>
+                            <li>из-за строения тела (как у таксы) избегайте прыжков с высоты и крутых подъёмов/спусков — это нагрузка на позвоночник.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Гигиена и шерсть -->
+                <article class="card" data-category="dog">
+                    <img src="https://img.freepik.com/premium-photo/groomer-brushing-small-dog-during-professional-grooming-session_1048944-27822703.jpg?semt=ais_hybrid&w=740" alt="Груминг собаки" class="card-image">
+                    <div class="card-content">
+                        <h3 class="card-title">2. Гигиена и уход за шерстью</h3>
+                        <ul class="care-steps">
+                            <li>вычёсывайте 2–3 раза в неделю щёткой для короткошёрстных собак;</li>
+                            <li>купайте не чаще 1 раза в месяц со специальным шампунем для собак;</li>
+                            <li>регулярно осматривайте и чистите уши (особенно если они висячие или полувисячие);</li>
+                            <li>подстригайте когти каждые 3–4 недели, если они не стачиваются на асфальте;</li>
+                            <li>следите за состоянием подушечек лап: зимой соль и реагенты могут вызывать раздражение.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Питание -->
+                <article class="card" data-category="dog">
+                    <img src="https://mimer.ru/content/ckfinder/userfiles/images/%D1%81%D1%83%D1%88%D0%BA%D0%B02.jpg" alt="Корм для собаки" class="card-image">
+                    <div class="card-content">
+                        <h3 class="card-title">3. Питание</h3>
+                        <ul class="care-steps">
+                            <li>используйте корм премиум‑ или суперпремиум‑класса, подходящий по возрасту и активности;</li>
+                            <li>контролируйте порции: метисы склонны к набору веса, а лишний вес усиливает риски для позвоночника и суставов;</li>
+                            <li>не давайте еду со стола: особенно опасны для собак лук, чеснок, шоколад, виноград, солёное и копчёное;</li>
+                            <li>обеспечьте постоянный доступ к чистой воде;</li>
+                            <li>при натуральном рационе обязательно консультируйтесь с ветеринаром и добавляйте витамины/минералы по его рекомендации.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Здоровье и профилактика -->
+                <article class="card" data-category="dog">
+                    <img src="https://img.freepik.com/premium-vector/veterinarian-checking-dog-stethoscope-cartoon-style_456865-251.jpg?semt=ais_hybrid" alt="Ветеринар и собака" class="card-image">
+                    <div class="card-content">
+                        <h3 class="card-title">4. Здоровье и профилактика</h3>
+                        <ul class="care-steps">
+                            <li>плановые осмотры у ветеринара минимум 1 раз в год (для пожилых собак — каждые 6 месяцев);</li>
+                            <li>ежегодная вакцинация и регулярная обработка от паразитов (блох, клещей, глистов);</li>
+                            <li>обращайте внимание на признаки проблем с позвоночником: скованность движений, нежелание прыгать, изменение походки;</li>
+                            <li>для метисов с таксоподобным строением особенно важно не допускать ожирения и чрезмерных нагрузок на спину.</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>«Мир домашних питомцев» — советы по уходу, здоровью и содержанию животных. Информация носит ознакомительный характер и не является ветеринарной консультацией.</p>
+            <p>&copy; 2026 Мир домашних питомцев. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Переключение темы
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme); // запоминаем выбор пользователя
+        });
+
+        // Восстановление темы при перезагрузке
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Фильтры по категориям (кошки/собаки)
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.card');
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // убираем активный класс у всех кнопок
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                cards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+
+                    if (filterValue === 'all' || cardCategory === filterValue) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Плавное открытие выпадающего меню
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dd => {
+            const btn = dd.querySelector('.dropbtn');
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                dd.classList.toggle('open');
+            });
+        });
+
+        // Закрытие меню при клике вне его
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                dropdowns.forEach(dd => dd.classList.remove('open'));
+            }
+        });
+    </script>
+	<script>
+    const searchForm = document.querySelector('form[action="/search.html"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // не уходим на другую страницу
+            const query = e.target.querySelector('input[name="q"]')?.value.trim().toLowerCase();
+            if (!query) return;
+
+            // Сбрасываем подсветку старых результатов
+            document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+
+            let found = false;
+            // Ищем по всем текстовым узлам на странице
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                if (!text || text.length < query.length) return;
+
+                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+                if (!regex.test(text)) return;
+
+                found = true;
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            });
+
+            if (!found) {
+                alert('Ничего не найдено на этой странице');
+            }
+        });
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+</script>
+
+<style>
+    .search-highlight {
+        background-color: #ffeb3b;
+        color: #000;
+        padding: 0 2px;
+        border-radius: 4px;
+    }
+</style>
+</body>
+</html>

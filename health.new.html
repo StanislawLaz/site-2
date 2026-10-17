@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Здоровье британской короткошёрстной кошки и метиса (пинчер + такса)</title>
+    <style>
+        :root {
+            --bg-page: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #4a5568;
+            --primary: #88C8FF;
+            --accent: #FFCCFF;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+            --gap: 1.5rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #1a1a1d;
+            --bg-card: #2d2d33;
+            --text-main: #f7fafc;
+            --text-muted: #cbd5e0;
+            --primary: #5a9ed6;
+            --accent: #d63384;
+            --border: #333;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--text-main);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            max-height: 50px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .functional-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-width: 200px;
+        }
+
+        .func-btn {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .func-btn:hover { background-color: var(--primary-hover, var(--primary)); }
+
+        /* Навигация и выпадающее меню */
+        .nav-menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 0.5rem; }
+        .nav-menu > li { position: relative; }
+
+        .dropbtn {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.7rem 1rem;
+            display: block;
+            border-radius: var(--radius);
+        }
+        .dropbtn:hover { background: rgba(255,255,255,0.2); }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--bg-card);
+            min-width: 220px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius);
+            z-index: 2000;
+            padding: 0.5rem 0;
+        }
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 0.7rem 1rem;
+            display: block;
+        }
+        .dropdown-content a:hover { background: var(--primary); color: #fff; }
+        .dropdown.open .dropdown-content { display: block; }
+
+        h1.page-title {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-main);
+        }
+
+        /* Фильтры */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Сетка карточек */
+        .animals-health {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap);
+        }
+
+        @media (min-width: 640px) {
+            .animals-health { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+        }
+
+        .animal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            transition: var(--transition);
+            display: none;
+        }
+
+        .animal-card.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .animal-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+        .animal-card h2 {
+            color: #4CAF50;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+        }
+
+        .health-section { margin-bottom: 1.5rem; }
+        .health-section h3 { color: var(--text-main); margin-top: 1.5rem; margin-bottom: 0.6rem; font-size: 1.1rem; }
+        .health-section ul { padding-left: 1.5rem; margin: 0.8rem 0; }
+        .health-section li { margin-bottom: 0.5rem; color: var(--text-muted); }
+        .health-section strong { color: var(--text-main); }
+
+        /* Общие рекомендации — отдельный широкий блок */
+        .common-recommendations {
+            grid-column: 1 / -1; /* на всю ширину сетки */
+            background: var(--accent);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-top: var(--gap);
+            border: 1px solid var(--border);
+        }
+
+        .common-recommendations h2 {
+            color: #333;
+            border-bottom: 3px solid #32CD32;
+            padding-bottom: 10px;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .disclaimer {
+            grid-column: 1 / -1;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 1.2rem;
+            border-radius: var(--radius);
+            margin: var(--gap) 0;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            margin-top: var(--gap);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="logo" aria-label="Логотип и название сайта">
+            <img src="https://i.pinimg.com/736x/25/f6/18/25f618610b642249f1bffbb62b116236.jpg" alt="Логотип сайта: Мир домашних питомцев" width="50" height="50">
+            <h1>Мир домашних питомцев</h1>
+        </div>
+        <div class="functional-buttons">
+            <!-- Поиск -->
+            <form action="/search.html" method="GET" style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                <input type="text" name="q" placeholder="Найти на сайте..." aria-label="Поиск по сайту">
+                <button type="submit" class="func-btn">↵</button>
+            </form>
+            <!-- Кнопка темы -->
+            <button id="theme-toggle" class="func-btn" aria-label="Переключить тему оформления">🌙 Тема</button>
+            <!-- Навигация -->
+            <nav>
+                <ul class="nav-menu">
+                <li><a href="index.new.html">Главная</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn" aria-haspopup="true" aria-expanded="false">Разделы сайта ▾</a>
+                    <div class="dropdown-content">
+                        <a href="breeds.new.html">Породы</a>
+                        <a href="care.new.html">Уход</a>
+                        <a href="health.new.html">Здоровье</a>
+                        <a href="fun.new.html">Забавное</a>
+                    </div>
+                </li>
+            </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">Здоровье британской короткошёрстной кошки и метиса (с участием пинчера и таксы)</h1>
+
+    <!-- Фильтры -->
+    <div class="filters" role="group" aria-label="Фильтры по типу животных">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="cat">Кошки</button>
+        <button class="filter-btn" data-filter="dog">Собаки</button>
+    </div>
+
+    <div class="animals-health">
+        <!-- Карточка британской кошки -->
+        <article class="animal-card" data-category="cat" aria-hidden="true">
+            <h2>Здоровье британской короткошёрстной кошки</h2>
+
+            <div class="health-section">
+                <h3>Основные риски для здоровья:</h3>
+                <ul>
+                    <li><strong>Заболевания сердца.</strong> Британцы склонны к гипертрофической кардиомиопатии — утолщению стенок сердечных камер. Регулярные осмотры у ветеринара с проведением УЗИ сердца помогут выявить проблему на ранней стадии.</li>
+                    <li><strong>Ожирение.</strong> Из‑за спокойного темперамента и хорошего аппетита британцы легко набирают лишний вес. Это повышает риск диабета, артрита и заболеваний печени.</li>
+                    <li><strong>Поликистоз почек.</strong> Наследственное заболевание, при котором в почках образуются кисты. Важно проверять родословную и проводить генетические тесты.</li>
+                    <li><strong>Стоматологические проблемы.</strong> Накопление зубного налёта и камня может привести к гингивиту и пародонтиту.</li>
+                    <li><strong>Проблемы с суставами.</strong> Из‑за массивного телосложения возможны проявления артроза в пожилом возрасте.</li>
+                </ul>
+            </div>
+
+            <div class="health-section">
+                <h3>Профилактика и поддержание здоровья:</h3>
+                <ul>
+                    <li><strong>Регулярные осмотры.</strong> Посещайте ветеринара минимум 1 раз в год (для пожилых кошек — 2 раза в год).</li>
+                    <li><strong>Контроль веса.</strong> Корректируйте рацион и порции, избегайте перекармливания.</li>
+                    <li><strong>Гигиена полости рта.</strong> Чистите зубы 1–2 раза в неделю специальной пастой для кошек.</li>
+                    <li><strong>Физическая активность.</strong> Играйте с кошкой 10–15 минут в день, используйте интерактивные игрушки.</li>
+                    <li><strong>Вакцинация и дегельминтизация.</strong> Соблюдайте график прививок и обработки от паразитов.</li>
+                    <li><strong>Сбалансированное питание.</strong> Выбирайте корма премиум‑ или суперпремиум‑класса, подходящие по возрасту и активности.</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- Карточка метиса -->
+        <article class="animal-card" data-category="dog" aria-hidden="true">
+            <h2>Здоровье метиса (предположительно с участием пинчера и таксы)</h2>
+
+            <div class="health-section">
+                <h3>Типичные проблемы:</h3>
+                <ul>
+                    <li><strong>Проблемы со спиной.</strong> Если в родословной есть такса, высок риск заболеваний позвоночника, включая межпозвоночные грыжи. Избегайте прыжков с высоты и чрезмерных нагрузок.</li>
+                    <li><strong>Заболевания зубов.</strong> Мелкие породы склонны к образованию зубного камня и выпадению зубов. Регулярная гигиена полости рта обязательна.</li>
+                    <li><strong>Аллергии.</strong> Могут проявляться кожным зудом, покраснениями, выделениями из глаз или ушей. Часто вызваны пищевыми аллергенами или внешними раздражителями.</li>
+                    <li><strong>Ожирение.</strong> При малоподвижном образе жизни и избыточном кормлении риск набора веса возрастает, что усугубляет нагрузку на суставы и сердце.</li>
+                    <li><strong>Ушные инфекции.</strong> Длинные уши пинчеров и такс требуют регулярного осмотра и чистки, чтобы предотвратить воспаления.</li>
+                    <li><strong>Пателла (вывих коленной чашечки).</strong> Характерен для мелких пород, может вызывать хромоту.</li>
+                </ul>
+            </div>
+
+            <div class="health-section">
+                <h3>Рекомендации по уходу за здоровьем:</h3>
+                <ul>
+                    <li><strong>Осторожные нагрузки.</strong> Избегайте прыжков и резких движений, особенно у щенков и пожилых собак.</li>
+                    <li><strong>Уход за ушами.</strong> Осматривайте и чистите уши 1–2 раза в неделю.</li>
+                    <li><strong>Гигиена зубов.</strong> Чистите зубы специальной пастой 3–4 раза в неделю.</li>
+                    <li><strong>Контроль питания.</strong> Подбирайте рацион с учётом возраста, веса и активности питомца. Избегайте «человеческой» еды и лакомств с высоким содержанием жира и соли — они провоцируют панкреатит и лишний вес.</li>
+            <li><strong>Физическая активность.</strong> Гуляйте 2–3 раза в день по 30–60 минут, включайте игры и дрессировку. Для собак с риском проблем со спиной выбирайте спокойные прогулки без прыжков и резких разворотов.</li>
+            <li><strong>Профилактические осмотры.</strong> Посещайте ветеринара 1–2 раза в год для раннего выявления проблем. Пожилым собакам и животным с хроническими состояниями график подбирает врач индивидуально.</li>
+            <li><strong>Обработка от паразитов.</strong> Регулярно применяйте средства от блох, клещей и гельминтов согласно инструкции и рекомендациям ветеринара. Учитывайте сезонность и регион проживания.</li>
+            <li><strong>Температурный режим.</strong> Мелкие собаки быстро переохлаждаются и перегреваются. В холодную погоду используйте одежду, в жару избегайте долгих прогулок в полдень и следите за доступом к воде.</li>
+            <li><strong>Социализация и спокойная обстановка.</strong> Стабильная среда снижает уровень стресса, который может усугублять аллергии и кожные проблемы. Знакомьте собаку с новыми людьми и местами постепенно, без принуждения.</li>
+        </ul>
+    </div>
+</article>
+
+<!-- Общие рекомендации -->
+<article class="animal-card common-recommendations" data-category="all" aria-hidden="true">
+    <h2>Общие рекомендации для обоих животных</h2>
+
+    <div class="health-section">
+        <h3>Важные профилактические меры:</h3>
+        <ul>
+            <li><strong>Своевременная вакцинация.</strong> Защищает от опасных инфекций. Соблюдайте график прививок, рекомендованный ветеринаром, и не пропускайте ревакцинации.</li>
+            <li><strong>Дегельминтизация.</strong> Проводите обработку от гельминтов каждые 3–6 месяцев, в зависимости от образа жизни животного и рекомендаций врача.</li>
+            <li><strong>Регулярные осмотры у ветеринара.</strong> Посещайте клинику минимум 1 раз в год (для пожилых животных — 2 раза в год). Профилактический осмотр включает измерение температуры, пульса, давления, аускультацию сердца и лёгких, пальпацию живота и лимфоузлов.</li>
+            <li><strong>Сбалансированное питание.</strong> Подбирайте корм с учётом возраста, веса, породы и уровня активности питомца. При наличии хронических заболеваний или особых потребностей ветеринар может порекомендовать лечебную диету.</li>
+            <li><strong>Физическая активность.</strong> Обеспечьте достаточную нагрузку: игры для кошек, прогулки для собак. Активность поддерживает нормальный вес, здоровье суставов и психоэмоциональное состояние.</li>
+            <li><strong>Гигиенический уход.</strong> Регулярно чистите зубы, уши, глаза, расчёсывайте шерсть, подстригайте когти. Гигиена снижает риск воспалений и инфекций.</li>
+        </ul>
+    </div>
+
+    <div class="health-section">
+        <h3>Признаки, требующие обращения к ветеринару:</h3>
+        <ul>
+            <li>Вялость, апатия, снижение активности.</li>
+            <li>Потеря аппетита или отказ от воды.</li>
+            <li>Изменения стула (диарея, запор, примеси крови или слизи).</li>
+            <li>Кашель, чихание, затруднённое дыхание.</li>
+            <li>Выделения из глаз, носа или ушей.</li>
+            <li>Зуд, покраснения, высыпания на коже.</li>
+            <li>Хромота или скованность движений.</li>
+            <li>Резкая потеря или набор веса.</li>
+            <li>Необычное поведение (агрессия, беспокойство, скрытность).</li>
+            <li>Рвота, многократная или с примесями.</li>
+        </ul>
+    </div>
+
+    <div class="health-section">
+        <h3>Советы по профилактике:</h3>
+        <ul>
+            <li><strong>Контролируйте вес.</strong> Ожирение — один из главных факторов риска для суставов, сердца и обмена веществ. Взвешивайте питомца регулярно и корректируйте порции по рекомендации врача.</li>
+            <li><strong>Обеспечьте безопасную среду.</strong> Для собак с риском проблем со спиной (особенно с признаками таксы) исключите прыжки с диванов/кресел, используйте пандусы или помогайте спускаться. Для кошек уберите мелкие предметы, которые можно проглотить, и закрепите тяжёлые предметы, чтобы избежать травм при прыжках.</li>
+            <li><strong>Следите за качеством воды.</strong> Чистая свежая вода должна быть доступна постоянно. Для кошек предпочтительны широкие неглубокие миски или фонтанчики — это стимулирует питьё и снижает риск мочекаменной болезни.</li>
+            <li><strong>Избегайте самолечения.</strong> Не давайте питомцу лекарства без назначения врача. Многие «человеческие» препараты токсичны для животных.</li>
+            <li><strong>Ведите дневник здоровья.</strong> Записывайте даты прививок, обработок, результаты анализов, изменения веса и любые симптомы. Это поможет ветеринару быстрее поставить диагноз при необходимости.</li>
+        </ul>
+    </div>
+</article>
+
+<div class="disclaimer">
+    <strong>Важно:</strong> Данная информация носит справочный характер и не является ветеринарной консультацией. Любые вопросы о здоровье питомца обсуждайте с ветеринарным врачом. При острых состояниях и травмах немедленно обратитесь в клинику.
+</div>
+</div> <!-- .animals-health -->
+</main>
+
+<footer>
+    <p>&copy; 2026 Мир домашних питомцев. Информация предназначена для ознакомления и не заменяет консультацию ветеринарного врача.</p>
+</footer>
+
+<script>
+    // Переключение темы
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+        const isDark = body.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+            body.removeAttribute('data-theme');
+            themeToggle.textContent = '🌙 Тема';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            themeToggle.textContent = '☀️ Светлая';
+        }
+    });
+
+    // Выпадающее меню
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    dropdowns.forEach(dropdown => {
+        const btn = dropdown.querySelector('.dropbtn');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpen = dropdown.classList.contains('open');
+            dropdowns.forEach(d => d.classList.remove('open'));
+            if (!isOpen) dropdown.classList.add('open');
+        });
+    });
+
+    // Фильтры карточек
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.animal-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Убираем активный класс у всех кнопок
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filterValue = btn.getAttribute('data-filter');
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const isVisible = filterValue === 'all' || category === filterValue;
+                if (isVisible) {
+                    card.classList.add('visible');
+                } else {
+                    card.classList.remove('visible');
+                }
+            });
+        });
+    });
+
+    // Показываем все карточки при загрузке
+    cards.forEach(card => card.classList.add('visible'));
+</script>
+	<script>
+    const searchForm = document.querySelector('form[action="/search.html"]');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // не уходим на другую страницу
+            const query = e.target.querySelector('input[name="q"]')?.value.trim().toLowerCase();
+            if (!query) return;
+
+            // Сбрасываем подсветку старых результатов
+            document.querySelectorAll('.search-highlight').forEach(el => el.classList.remove('search-highlight'));
+
+            let found = false;
+            // Ищем по всем текстовым узлам на странице
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                if (!text || text.length < query.length) return;
+
+                const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+                if (!regex.test(text)) return;
+
+                found = true;
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                node.parentNode.replaceChild(span, node);
+            });
+
+            if (!found) {
+                alert('Ничего не найдено на этой странице');
+            }
+        });
+    }
+
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+</script>
+
+<style>
+    .search-highlight {
+        background-color: #ffeb3b;
+        color: #000;
+        padding: 0 2px;
+        border-radius: 4px;
+    }
+</style>
+</body>
+</html>
